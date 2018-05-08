@@ -1,11 +1,15 @@
 package com.sourcegraph.gradle;
 
 import org.gradle.api.DefaultTask;
+import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.Project;
+import org.gradle.api.tasks.options.Option;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +21,7 @@ import java.util.stream.Collectors;
 import groovy.json.JsonOutput;
 
 public class Greeting extends DefaultTask {
+
     /**
      * The root project
      */
@@ -106,7 +111,19 @@ public class Greeting extends DefaultTask {
         getProject().getGradle().buildFinished(__ -> {
             Map<String, Object> javaconfig = new HashMap<>();
             javaconfig.put("projects", pconfig);
-            System.out.println(JsonOutput.prettyPrint(JsonOutput.toJson(javaconfig)));
+            String output = JsonOutput.prettyPrint(JsonOutput.toJson(javaconfig));
+
+            Object outFile = getProject().getProperties().get("outputFile");
+            if (outFile == null) {
+                System.out.println(output);
+            } else {
+                try {
+                    Files.write(getProject().file(outFile).toPath(), output.getBytes());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
         });
     }
 
