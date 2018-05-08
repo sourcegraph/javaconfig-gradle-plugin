@@ -1,3 +1,15 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.gradle.publish:plugin-publish-plugin:0.9.10"
+    }
+}
+
+apply plugin: "com.gradle.plugin-publish"
 apply plugin: 'groovy'
 
 dependencies {
@@ -5,23 +17,19 @@ dependencies {
     compile localGroovy()
 }
 
-apply plugin: 'maven'
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testCompile 'junit:junit:4.12'
-}
-
 group = 'com.sourcegraph'
 version = '1.0-SNAPSHOT'
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: uri('/home/beyang/.m2/repository'))
+pluginBundle {
+    website = 'https://about.sourcegraph.com/'
+    vcsUrl = 'https://github.com/sourcegraph/javaconfig-gradle-plugin'
+    description = 'Plugin to generate javaconfig from Gradle scripts'
+    tags = ['sourcegraph', 'javaconfig', 'lsp']
+
+    plugins {
+        gradlePlugin {
+            id = 'com.sourcegraph.gradle'
+            displayName = 'Sourcegraph Java language server Gradle plugin'
         }
     }
 }
