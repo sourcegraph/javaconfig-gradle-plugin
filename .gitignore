@@ -1,2 +1,8 @@
 .gradle
 build/
+.idea/
+gradle/
+gradlew
+gradlew.bat
+javaconfig-gradle-plugin.iml
+local.properties
