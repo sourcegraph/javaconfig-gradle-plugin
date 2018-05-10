@@ -74,8 +74,8 @@ public class Greeting extends DefaultTask {
                     .filter(c -> configWhitelist.contains(c.getName()))
                     .flatMap(c -> c.getAllDependencies().stream().map(d -> {
                         HashMap<String, Object> depInfo = new HashMap<>();
-                        depInfo.put("group", d.getGroup());
-                        depInfo.put("name", d.getName());
+                        depInfo.put("groupId", d.getGroup());
+                        depInfo.put("artifactId", d.getName());
                         depInfo.put("version", d.getVersion());
                         return depInfo;
                     })).distinct().collect(Collectors.toList());
