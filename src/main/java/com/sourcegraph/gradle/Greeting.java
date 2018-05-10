@@ -1,14 +1,12 @@
 package com.sourcegraph.gradle;
 
 import org.gradle.api.DefaultTask;
-import org.gradle.api.tasks.OutputFile;
+import org.gradle.api.artifacts.repositories.MavenArtifactRepository;
 import org.gradle.api.tasks.SourceSetContainer;
-import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.Project;
-import org.gradle.api.tasks.options.Option;
+import org.gradle.api.tasks.TaskAction;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,6 +68,23 @@ public class Greeting extends DefaultTask {
             info.put("groupId", project.getGroup());
             info.put("version",  project.getVersion());
 
+            List<Map<String, Object>> repositories = new ArrayList<>();
+            project.getRepositories().stream().forEach(r -> {
+                if (r instanceof MavenArtifactRepository) {
+                    MavenArtifactRepository r1 = (MavenArtifactRepository) r;
+                    Map<String, Object> rInfo = new HashMap<>();
+                    rInfo.put("id", r1.getName());
+                    rInfo.put("name", r1.getName());
+                    rInfo.put("url", r1.getUrl().toString());
+                    repositories.add(rInfo);
+                } else {
+                    getLogger().warn("WARNING: could not translate repository {} of type {}", r.getName(), r.getClass().getSimpleName());
+                }
+            });
+            if (repositories.size() > 0) {
+                info.put("repositories", repositories);
+            }
+
             List<Map<String, Object>> deps = project.getConfigurations().stream()
                     .filter(c -> configWhitelist.contains(c.getName()))
                     .flatMap(c -> c.getAllDependencies().stream().map(d -> {
@@ -123,8 +138,6 @@ public class Greeting extends DefaultTask {
                     throw new RuntimeException(e);
                 }
             }
-
         });
     }
-
 }
