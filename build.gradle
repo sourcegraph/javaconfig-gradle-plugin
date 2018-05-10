@@ -23,7 +23,7 @@ version = '1.3'
 pluginBundle {
     website = 'https://about.sourcegraph.com/'
     vcsUrl = 'https://github.com/sourcegraph/javaconfig-gradle-plugin'
-    description = 'Plugin to generate javaconfig from Gradle scripts'
+    description = 'Plugin to generate a javaconfig.json file for Sourcegraph. Add the plugin to your build using the instructions below. Then run `./gradlew javaconfig -P outputFile=javaconfig.json` and commit the generated `javaconfig.json` to your repository. This plugin has been tested with Gradle version 4.'
     tags = ['sourcegraph', 'javaconfig', 'lsp']
 
     plugins {
