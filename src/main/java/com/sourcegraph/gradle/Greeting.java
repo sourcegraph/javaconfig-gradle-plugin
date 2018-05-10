@@ -72,6 +72,9 @@ public class Greeting extends DefaultTask {
             project.getRepositories().stream().forEach(r -> {
                 if (r instanceof MavenArtifactRepository) {
                     MavenArtifactRepository r1 = (MavenArtifactRepository) r;
+                    if (r1.getUrl().getScheme().equals("file")) {
+                        return; // ignore references to local repositories
+                    }
                     Map<String, Object> rInfo = new HashMap<>();
                     rInfo.put("id", r1.getName());
                     rInfo.put("name", r1.getName());
